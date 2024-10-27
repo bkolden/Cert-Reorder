@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 """Sorts PEM certificates in a particular order."""
+
 import argparse
 from typing import Optional
 
@@ -9,33 +10,37 @@ import OpenSSL
 def build_parser() -> argparse.ArgumentParser:
     """Define argParser arguments and variables.
 
-    Returns:
-        argument parser object.
+    Returns argument parser object.
     """
     parser = argparse.ArgumentParser(
-        description="Manipulate the order of certificates in a pem style file",
+        description='Manipulate the order of certificates in a pem style file',
     )
-    parser.add_argument("file", type=argparse.FileType("r"), default="-", nargs="?")
+    parser.add_argument('file', type=argparse.FileType('r'), default='-', nargs='?')
     action = parser.add_mutually_exclusive_group()
     action.add_argument(
-        "-r",
-        "--reverse",
-        dest="action",
-        action="store_const",
+        '-r',
+        '--reverse',
+        dest='action',
+        action='store_const',
         const=reverse,
         default=interactive,
-        help="Reverse the order of certificates.",
+        help='Reverse the order of certificates.',
     )
     action.add_argument(
-        "-p",
-        "--print",
-        dest="action",
-        action="store_const",
+        '-p',
+        '--print',
+        dest='action',
+        action='store_const',
         const=print_cert_name,
-        help="",
+        help='',
     )
     action.add_argument(
-        "-a", "--auto", dest="action", action="store_const", const=auto, help="",
+        '-a',
+        '--auto',
+        dest='action',
+        action='store_const',
+        const=auto,
+        help='',
     )
     return parser
 
@@ -45,8 +50,8 @@ class CertParser:
 
     def __init__(self) -> None:
         """Static variables for parsing PEM certificates."""
-        self._begin = "-----BEGIN CERTIFICATE-----"
-        self._end = "-----END CERTIFICATE-----"
+        self._begin = '-----BEGIN CERTIFICATE-----'
+        self._end = '-----END CERTIFICATE-----'
 
     def _get_lines(self, file: argparse.FileType) -> list:
         """Add Docs here.
@@ -92,7 +97,7 @@ class CertParser:
         Returns: List of PEM certificates.
         """
         content = self._get_lines(file)
-        return ["\n".join(x) for x in self._get_certificates(content)]
+        return ['\n'.join(x) for x in self._get_certificates(content)]
 
     def get_common_name(self, cert: str) -> str:
         """Parse given cert for Common Name.
@@ -142,7 +147,7 @@ def as_chain(certs: list) -> str:
 
     Returns string containing all of the certificates.
     """
-    return "\n".join(certs)
+    return '\n'.join(certs)
 
 
 def find_root(certs: list) -> Optional[str]:
@@ -155,8 +160,8 @@ def find_root(certs: list) -> Optional[str]:
     """
     for i, cert in enumerate(certs):
         if (
-            cert["cert"].get_issuer().commonName
-            == cert["cert"].get_subject().commonName
+            cert['cert'].get_issuer().commonName
+            == cert['cert'].get_subject().commonName
         ):
             del certs[i]
             return cert
@@ -175,9 +180,10 @@ def parse(certs: list) -> list:
     for cert in certs:
         x.append(
             {
-                "text": cert,
-                "cert": OpenSSL.crypto.load_certificate(
-                    OpenSSL.crypto.FILETYPE_PEM, cert,
+                'text': cert,
+                'cert': OpenSSL.crypto.load_certificate(
+                    OpenSSL.crypto.FILETYPE_PEM,
+                    cert,
                 ),
             },
         )
@@ -193,9 +199,9 @@ def add_next(pcerts: dict, certs: list) -> Optional[str]:
 
     Returns certificate as a string.
     """
-    parent = pcerts["cert"].get_subject().commonName
+    parent = pcerts['cert'].get_subject().commonName
     for i, cert in enumerate(certs):
-        if cert["cert"].get_issuer().commonName == parent:
+        if cert['cert'].get_issuer().commonName == parent:
             del certs[i]
             return cert
     return None
@@ -217,7 +223,7 @@ def auto(certs: list) -> None:
         if next is None:
             break
         chain.insert(0, next)
-    chain = [c["text"] for c in chain]
+    chain = [c['text'] for c in chain]
     print(as_chain(chain))
 
 
@@ -229,9 +235,9 @@ def interactive(certs: list) -> None:
 
     Returns nothing.
     """
-    print("Not yet implemented")
+    print('Not yet implemented')
 
 
-if __name__ == "__main__":
+if __name__ == '__main__':
     args = build_parser().parse_args()
     args.action(CertParser().parse(args.file))

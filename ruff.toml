@@ -37,7 +37,10 @@ select = [
     "PTH",
     "RET",
     "RUF",
-    "YTT"
+    "YTT",
+]
+ignore = [
+    "COM812",
 ]
 
 [lint.isort]
