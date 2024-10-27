@@ -1,0 +1,50 @@
+line-length = 88
+indent-width = 4
+target-version = "py38"
+
+[format]
+exclude = ["*.pyi"]
+line-ending = "lf"
+quote-style = "single"
+
+[lint]
+select = [
+    "ANN001",
+    "ANN002",
+    "ANN003",
+    "ANN201",
+    "ANN202",
+    "ANN204",
+    "ANN205",
+    "ANN206",
+    "ANN401",
+    "C90",
+    "COM",
+    "D",
+    "DTZ",
+    "E4",
+    "E7",
+    "E9",
+    "EM",
+    "ERA",
+    "EXE",
+    "F",
+    "FIX",
+    "I",
+    "N",
+    "PIE",
+    "PL",
+    "PTH",
+    "RET",
+    "RUF",
+    "YTT"
+]
+
+[lint.isort]
+case-sensitive = true
+
+[lint.flake8-quotes]
+docstring-quotes = "double"
+
+[lint.pydocstyle]
+convention = "google"
