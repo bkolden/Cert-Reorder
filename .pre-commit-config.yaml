@@ -27,6 +27,8 @@ repos:
       - id: python-bandit-vulnerability-check
         args: [--verbose, --ini, .bandit, \*.py]
   - repo: local
+    # Uses local install of safety due to issues installing with
+    # 'pre-commit install-hooks'.
     hooks:
       - id: python-safety-dependencies-check
         name: safety
